@@ -61,16 +61,16 @@ Note 2: Haste supports Unity Rich Text. You can use this to create coloured (and
 <br>
 
 #### Simple Stat Effects
-So far, the items we've created haven't actually done anything, so let's create a simple item that increases our max energy when we have it. Here we see the other factory method provided by this library, `ItemFactory.NewPlayerStats`. Haste's native `PlayerStats` class is intended to be serialized into, and therefore doesn't assign default values to its fields. This would normally leave us the responsibility of initializing each field with a new PlayerStat object, even if we aren't assigning any meaningful values. `ItemFactory.NewPlayerStats` takes care of this boilerplate by assigning a default PlayerStat object to any fields you don't specify. In the example below, we create a PlayerStats that adds 50 max energy to the player. You can also set a multiplier instead of / in addition to the baseValue. Any fields in a PlayerStat that aren't specified will use a default value. See the PlayerStats class definition or an exported item JSON for a list of modifiable stats.
+So far, the items we've created haven't actually done anything, so let's create a simple item that increases our max energy when we have it. Here we see the other factory method provided by this library, `ItemFactory.CreatePlayerStats`. Haste's native `PlayerStats` class is intended to be serialized into, and therefore doesn't assign default values to its fields. This would normally leave us the responsibility of initializing each field with a new PlayerStat object, even if we aren't assigning any meaningful values. `ItemFactory.CreatePlayerStats` takes care of this boilerplate by assigning a default PlayerStat object to any fields you don't specify. In the example below, we create a PlayerStats that adds 50 max energy to the player. You can also set a multiplier instead of / in addition to the baseValue. Any fields in a PlayerStat that aren't specified will use a default value. See the PlayerStats class definition or an exported item JSON for a list of modifiable stats.
 
 ```csharp
 ItemFactory.AddItemToDatabase(
     itemName: "ExampleItem",
-    stats: ItemFactory.NewPlayerStats(maxEnergy: new PlayerStat { baseValue = 50f }) // Add 50 max energy to the player when they have this item
+    stats: ItemFactory.CreatePlayerStats(maxEnergy: new PlayerStat { baseValue = 50f }) // Add 50 max energy to the player when they have this item
 );
 ```
 
-Note 1: Keep in mind that `ItemFactory.NewPlayerStats` returns a `PlayerStats` object, while `ItemFactory.AddItemToDatabase` returns nothing.
+Note 1: Keep in mind that `ItemFactory.CreatePlayerStats` returns a `PlayerStats` object, while `ItemFactory.AddItemToDatabase` returns nothing.
 Note 2: There are two different similarly named native classes here. `PlayerStats` is a native class containing multiple `PlayerStat` fields.
 
 <br>
@@ -191,7 +191,7 @@ ItemFactory.AddItemToDatabase(
     {
         new AddVariable_Effect { amount = 50f, variableType = VariableType.Damage } // Deal 50 damage to the player when triggered
     },
-    stats: ItemFactory.NewPlayerStats(maxHealth: new PlayerStat { multiplier = 2.5f }) // Give the player +150% max health when they have this
+    stats: ItemFactory.CreatePlayerStats(maxHealth: new PlayerStat { multiplier = 2.5f }) // Give the player +150% max health when they have this
 );
 ```
 
@@ -220,7 +220,7 @@ float cooldown = 0f;                                                // The minim
 ItemTriggerType triggerType = ItemTriggerType.None;                 // The type of event that causes this item to attempt to trigger
 List<ItemTrigger> triggerConditions = new List<ItemTrigger> { };    // The item's trigger conditions
 List<ItemEffect> effects = new List<ItemEffect> { };                // The item's effects when triggered
-PlayerStats stats = ItemFactory.NewPlayerStats();                   // The PlayerStats object that will be added to the player when they get the item
+PlayerStats stats = ItemFactory.CreatePlayerStats();                   // The PlayerStats object that will be added to the player when they get the item
 UnityEvent effectEvent = new UnityEvent();                          // Used as an alternative to effects and trigger conditions. Not fully understood yet
 UnityEvent keyDownEvent = new UnityEvent();                         // Used as an alternative to effects and trigger conditions. Not fully understood yet
 UnityEvent keyUpEvent = new UnityEvent();                           // Used as an alternative to effects and trigger conditions. Not fully understood yet
