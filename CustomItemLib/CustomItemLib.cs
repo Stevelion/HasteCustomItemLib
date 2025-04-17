@@ -56,7 +56,7 @@ namespace CustomItemLib
             }
         }
 
-        public static PlayerStats NewPlayerStats(
+        public static PlayerStats CreatePlayerStats(
             PlayerStat? maxHealth = null,
             PlayerStat? runSpeed = null,
             PlayerStat? airSpeed = null,
@@ -210,7 +210,7 @@ namespace CustomItemLib
                 itemInstance.triggerType = triggerType ?? ItemTriggerType.None;
                 itemInstance.triggerConditions = triggerConditions ?? new List<ItemTrigger> { };
                 itemInstance.effects = effects ?? new List<ItemEffect> { };
-                itemInstance.stats = stats ?? NewPlayerStats();
+                itemInstance.stats = stats ?? CreatePlayerStats();
                 itemInstance.effectEvent = effectEvent ?? new UnityEvent();
                 itemInstance.keyDownEvent = keyDownEvent ?? new UnityEvent();
                 itemInstance.keyUpEvent = keyUpEvent ?? new UnityEvent();
