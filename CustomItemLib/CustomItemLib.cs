@@ -56,6 +56,21 @@ namespace CustomItemLib
             }
         }
 
+        public static UnityAction CreateAction<T>(
+            T specialItemEffectInstance,  // The object you want to pull the effect method from ie.    `new SlomoItem { duration = 5f }`
+            Func<T, UnityAction> selector // A lambda expression to access that method dynamically ie. `obj => obj.Activate`
+        )
+        {
+            return selector(specialItemEffectInstance);
+        }
+
+        public static UnityEvent CreateUnityEvent(List<UnityAction> listeners)
+        {
+            var unityEvent = new UnityEvent();
+            foreach (var listener in listeners) unityEvent.AddListener(listener);
+            return unityEvent;
+        }
+
         public static PlayerStats CreatePlayerStats(
             PlayerStat? maxHealth = null,
             PlayerStat? runSpeed = null,
@@ -83,30 +98,30 @@ namespace CustomItemLib
         )
         {
             PlayerStats playerStats = new PlayerStats
-            {
-                maxHealth = maxHealth ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                runSpeed = runSpeed ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                airSpeed = airSpeed ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                turnSpeed = turnSpeed ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                drag = drag ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                gravity = gravity ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                fastFallSpeed = fastFallSpeed ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                fastFallLerp = fastFallLerp ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                lives = lives ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                dashes = dashes ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                boost = boost ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                luck = luck ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                startWithEnergyPercentage = startWithEnergyPercentage ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                maxEnergy = maxEnergy ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                itemPriceMultiplier = itemPriceMultiplier ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                itemRarity = itemRarity ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                sparkMultiplier = sparkMultiplier ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                startingResource = startingResource ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                energyGain = energyGain ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                damageMultiplier = damageMultiplier ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                sparkPickupRange = sparkPickupRange ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                extraLevelSparks = extraLevelSparks ?? new PlayerStat { baseValue = 0f, multiplier = 1f },
-                extraLevelDifficulty = extraLevelDifficulty ?? new PlayerStat { baseValue = 0f, multiplier = 1f }
+            {   // For each field, either use the provided PlayerStat or create a new one with { baseValue = 0f, multiplier = 1f }
+                maxHealth = maxHealth ?? new(),
+                runSpeed = runSpeed ?? new(),
+                airSpeed = airSpeed ?? new(),
+                turnSpeed = turnSpeed ?? new(),
+                drag = drag ?? new(),
+                gravity = gravity ?? new(),
+                fastFallSpeed = fastFallSpeed ?? new(),
+                fastFallLerp = fastFallLerp ?? new(),
+                lives = lives ?? new(),
+                dashes = dashes ?? new(),
+                boost = boost ?? new(),
+                luck = luck ?? new(),
+                startWithEnergyPercentage = startWithEnergyPercentage ?? new(),
+                maxEnergy = maxEnergy ?? new(),
+                itemPriceMultiplier = itemPriceMultiplier ?? new(),
+                itemRarity = itemRarity ?? new(),
+                sparkMultiplier = sparkMultiplier ?? new(),
+                startingResource = startingResource ?? new(),
+                energyGain = energyGain ?? new(),
+                damageMultiplier = damageMultiplier ?? new(),
+                sparkPickupRange = sparkPickupRange ?? new(),
+                extraLevelSparks = extraLevelSparks ?? new(),
+                extraLevelDifficulty = extraLevelDifficulty ?? new()
             };
             return playerStats;
         }
@@ -195,6 +210,7 @@ namespace CustomItemLib
             {
                 Debug.Log($"[CustomItemLib] Creating new item {itemName}");
                 itemInstance = CreateNewItemInstance(itemName);
+                itemInstance.itemName = itemName; // Yes we have to put the name in 2 different places
                 itemInstance.minorItem = minorItem ?? false;
                 itemInstance.rarity = rarity ?? Rarity.Common;
                 itemInstance.itemTags = itemTags ?? new List<ItemTag>();
