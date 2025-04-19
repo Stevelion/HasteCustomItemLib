@@ -117,6 +117,8 @@ namespace CustomItemLib
             foreach (var descriptor in descriptors)
             {
                 Component effectComponent = itemObject.AddComponent(descriptor.ClassType);
+                MethodInfo configureMethod = descriptor.ClassType.GetMethod("Configure", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (configureMethod is not null) configureMethod.Invoke(effectComponent, null); // Provides a way to configure effects
                 MethodInfo method = descriptor.ClassType.GetMethod(descriptor.MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 if (method == null)
                 {
