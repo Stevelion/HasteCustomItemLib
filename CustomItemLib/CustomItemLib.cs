@@ -39,6 +39,13 @@ namespace CustomItemLib
                 LoadCustomItems();
             };
 
+            On.SaveSystem.Load += (orig) =>
+            {
+                HasteSave save = orig();
+                UnlockCustomItems();
+                return save;
+            };
+
             On.Player.RegisterItem += (orig, self, item) =>
             {
                 GameObject cloneGameObject = item.gameObject;
@@ -65,6 +72,21 @@ namespace CustomItemLib
                 }
             }
         }
+
+        private static void UnlockCustomItems()
+        {
+            foreach (string itemName in namesToUnlock)
+            {
+                if (FactSystem.GetFact(new Fact($"{itemName}_ShowItem")) == 0.0f || FactSystem.GetFact(new Fact($"item_unlocked_{itemName}")) == 0.0f)
+                {
+                    Debug.Log($"[CustomItemLib] Unlocking item {itemName}");
+                    FactSystem.SetFact(new Fact($"{itemName}_ShowItem"), 1.0f);
+                    FactSystem.SetFact(new Fact($"item_unlocked_{itemName}"), 1.0f);
+                }
+            }
+        }
+
+        private static List<string> namesToUnlock = new List<string>();
 
         private static void CloneRuntimeListeners(ItemInstance template, GameObject clone)
         {
@@ -292,9 +314,7 @@ namespace CustomItemLib
             }
             if (autoUnlocked)
             {
-                Debug.Log($"[CustomItemLib] Unlocking item {itemName}");
-                FactSystem.SetFact(new Fact($"{itemName}_ShowItem"), 1.0f);
-                FactSystem.SetFact(new Fact($"item_unlocked_{itemName}"), 1.0f);
+                namesToUnlock.Add(itemName);
             }
         }
     }
