@@ -152,6 +152,19 @@ namespace CustomItemLib
             return unityEvent;
         }
 
+        public static void CleanScriptsFromItem(string itemName, Type componentType)
+        {
+            ItemInstance itemInstance = ItemDatabase.instance.items.FirstOrDefault(e => e.name == itemName);
+            if (itemInstance == null)
+            {
+                Debug.LogWarning($"[CustomItemLib] No item named {itemName} found.");
+                return;
+            }
+            Component[] components = itemInstance.GetComponents(componentType);
+            if (components.Length > 0) foreach (var comp in components) UnityEngine.Object.Destroy(comp);
+            else Debug.Log($"[CustomItemLib] {itemInstance.itemName} does not have component {componentType.Name}");
+        }
+
         public static PlayerStats CreatePlayerStats(
             PlayerStat? maxHealth = null,
             PlayerStat? runSpeed = null,
